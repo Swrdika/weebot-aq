@@ -1,0 +1,36 @@
+{
+  "name": "cowboy",
+  "version": "0.0.1",
+  "description": "Light weight wa bot",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node index.js"
+  },
+  "keywords": [
+    "wa bot",
+    "bot whatsapp",
+    "whatsappweb bot",
+    "Swrdika",
+    "whatsapp-web.js"
+  ],
+  "author": "@Swrdika",
+  "license": "ISC",
+  "dependencies": {
+    "@xct007/frieren-scraper": "^0.0.2",
+    "awesome-phonenumber": "^5.6.0",
+    "axios": "^1.4.0",
+    "chalk": "^4.1.1",
+    "download": "^8.0.0",
+    "file-type": "^16.5.4",
+    "lodash": "^4.17.21",
+    "lowdb": "^2.1.0",
+    "node-fetch": "^2.6.11",
+    "path": "^0.12.7",
+    "pino": "^8.12.0",
+    "pino-pretty": "^10.0.0",
+    "qrcode-terminal": "^0.12.0",
+    "syntax-error": "^1.4.0",
+    "whatsapp-web.js": "github:pedroslopez/whatsapp-web.js"
+  }
+}
