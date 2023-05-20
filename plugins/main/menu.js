@@ -19,8 +19,7 @@ const defaultMenu = {
   before: `
 S T A T S
 ⬡ Name : *%name*
-⬡ Age : _soon_
-⬡ Registered : _soon_
+⬡ Registered : ${user.registered ? '✖️ *Belum Terdaftar*' : '✔️ *Terdaftar*'}
 
 B O T  S T A T S
 ⬡ Name : *%me*
@@ -28,6 +27,7 @@ B O T  S T A T S
 ⬡ Jam : *%time*
 ⬡ Platform : *${os.platform}*
 ⬡ Tanggal : %week %date
+⬡ Hit : ${totalhit} Hit
 
 
 `.trimStart(),
@@ -71,7 +71,11 @@ let handler = async (m, { conn, usedPrefix: _p, users }) => {
     let muptime = clockString(_muptime)
     let uptime = clockString(_uptime)
     let totalreg = Object.keys(global.db.data.users).length
+    let hit = global.db.data.stats
+    let totalhit = hit.success
     let rtotalreg = Object.values(global.db.data.users).filter(user => user.registered == true).length
+    let user = global.db.data.users[m.from]
+    //let registered = m.from ? true : false //test
     let help = Object.values(global.plugins).filter(plugin => !plugin.disabled).map(plugin => {
       return {
         help: Array.isArray(plugin.tags) ? plugin.help : [plugin.help],

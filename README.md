@@ -1,5 +1,3 @@
-# webot-aq
-
 Inspired by wabot-aq by Nurutomo
 
 i use whatsapp-web.js library and BE-WAWEB For base 
@@ -16,18 +14,18 @@ Thats All I just recode the code from the BerkahEsport(BEWAWEB) and add some new
 
 I will update this source code
 
-# Instalasi
+# Installation
 
 On VPS (Ubuntu/Debian)
 ```
 apt update && apt upgrade
 apt install ffmpeg nodejs git
-git clone https://github.com/Swrdika/webot-aq
+git clone https://github.com/Swrdika/weebot-aq
 cd webot-aq
 npm i
 node index.js
 ```
-This sc use puppeteer, how to install?
+This sc use puppeteer, and use Chrome how to install?
 
 (Ubuntu/Debian)
 ```

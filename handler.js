@@ -59,6 +59,18 @@ module.exports = {
                     premiumTime: 0,
                     warn: 0
                 }
+                
+               let chat = global.db.data.chats[m.chat]
+        if (typeof chat !== 'object') global.db.data.chats[m.chat] = {}
+        if (chat) {
+          if (!('isBanned' in chat)) chat.isBanned = false
+          if (!('antiLink' in chat)) chat.antiLink = false
+          if (!('antiSticker' in chat)) chat.antiSticker = false
+        } else global.db.data.chats[m.chat] = {
+          isBanned: false,
+          antiLink: false,
+          antiSticker: false,
+        }
             } catch (e) {
                 console.log("DATABASE RUSAK", e)
             }
@@ -170,6 +182,10 @@ module.exports = {
                     fail('private', m, conn)
                     continue;
                 }
+                if (plugin.register == true && _user.registered == false) { // Butuh daftar?
+                    fail('unreg', m, this)
+                    continue
+                }
       
                 m.isCommand = true;
                 let xp = 'exp' in plugin ? parseInt(plugin.exp) : 3 // <----- EXP yang didapat per Command ----->
@@ -262,10 +278,10 @@ module.exports = {
 
 
 global.dfail = (type, m, conn) => {
-    let gambar =  MessageMedia.fromFilePath('./src/access_ditolak.jpg')
-    let userss = await m.getContact();
-    let nmsr = `👋 Hai *@${userss.pushname}*, `
-   let msg = {
+    let userrs = global.db.data.users[m.from]
+    let userss = userrs.name
+    let nmsr = `👋 Hai *@${userss}*,\n`
+    let msg = {
     rowner: `${nmsr}\n🤵‍♂️ Mohon maaf, perintah ini hanya dapat digunakan oleh *OWNER* bot!`,
     owner: `${nmsr}\n👑 Maaf ya, perintah ini hanya untuk *Owner Bot*!`,
     mods: `${nmsr}\n🕵️‍♂️ Mohon maaf, hanya *Moderator* yang bisa menggunakan perintah ini!`,
@@ -276,7 +292,8 @@ global.dfail = (type, m, conn) => {
     botAdmin: `${nmsr}\n🤖 Jadikan bot sebagai *Admin* untuk menggunakan perintah ini!`,
     nsfw: `${nmsr}\n🔞 Mohon maaf, fitur NSFW tidak aktif saat ini. Silahkan hubungi Team Bot Discussion untuk mengaktifkan fitur ini!`,
     rpg: `${nmsr}\n🎮 Maaf, fitur RPG tidak aktif saat ini. Silahkan hubungi Team Bot Discussion Untuk mengaktifkan fitur ini!`,
-    restrict: `${nmsr}\n❌ Maaf, fitur ini sedang di *disable*!`
+    restrict: `${nmsr}\n❌ Maaf, fitur ini sedang di *disable*!`,
+    unreg: `${nmsr}\n📁 Maaf, anda harus registrasi terlebih dahulu\nGunakan command /daftar untuk mendaftar`
 }[type]
 if (msg) return conn.sendMessage(m.from, msg, {
                                                extra:{
