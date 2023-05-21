@@ -119,12 +119,13 @@ global.db = new Low(
 
 async function ClientConnect() {
     global.conn = new Client({
-        authStrategy: new LocalAuth(),
-        clientId: 'cowboy-bebot',
-        dataPath: './session'
+        authStrategy: new LocalAuth({
+        clientId: 'cowboy-bebot', // isi sesuka klean
+        dataPath: './session' // nama folder session bebas dikasih nama apa aja
+        }),
         puppeteer: {
             args: ["--no-sandbox", "--disable-gpu"],
-            executablePath: '/usr/bin/google-chrome-stable'
+            executablePath: '/usr/bin/google-chrome-stable'// khusus vps | kalo kamu pengguna rdp bisa ganti jadj path chrome mu
             // Ubah sesuai lokasi penginstalan chrome kamu. 
             // (Jika tidak maka error, kalo mau jalanin hapus aja bagian executablePath. Tapi kamu ga bisa ngirim video!)
         }
@@ -132,7 +133,6 @@ async function ClientConnect() {
 
     // <----- Menghubungkan koneksi WAWEB ----->
     conn.on('loading_screen', (percent) => {
-        logger.info(`Mengubungkan, membuka situs... Berjalan: ${percent}%`);
     });
 
     // <----- Membuat QR untuk di scan Perangkat tertaut ----->
@@ -143,7 +143,7 @@ async function ClientConnect() {
 
     // <----- Sedang memverifikasi WhatsappWEB----->
     conn.on('authenticated', () => {
-      logger.info("Verifikasi BOT WAWEB...");
+      logger.info("Connecting...");
   });
     
   // Jika gagal verifikasi maka kita koneksikan ulang ----->
@@ -156,7 +156,7 @@ async function ClientConnect() {
     // <----- BOT sudah terhubung ke Whatsapp ----->
     conn.on('ready', async () => {
         if (global.db.data == null) await loadDatabase();
-        logger.info("Klien bot sudah siap!!"); // Code dibawah buat info bot ini berjalan sukses...
+        logger.info("Connected ✅"); // Code dibawah buat info bot ini berjalan sukses...
         await conn.sendMessage("6281238142144@c.us", `${JSON.stringify(conn.info)}`)
     });
 
@@ -165,7 +165,6 @@ async function ClientConnect() {
 
     // <----- Menginisiasi Whatsapp ke BOT ----->
     conn.initialize();
-    logger.info("Mencoba koneski ke WaWeb...")
 
     return conn;
 

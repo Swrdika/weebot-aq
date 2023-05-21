@@ -11,6 +11,6 @@ const media = await MessageMedia.fromUrl(url)
 await conn.sendMessage(m.from, media, {caption: '📸'})
 }
 handler.command = /^(tentacles)$/i
-handler.tags = ['anime'] 
+handler.tags = ['anime', 'nsfw'] 
 handler.help = ['tentacles']
 module.exports = handler

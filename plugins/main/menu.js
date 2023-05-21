@@ -5,20 +5,21 @@ let path = require('path')
 let os = require('os')
 const { platform } = os
 let tags = {
-  'main': 'MENU UTAMA',
-  'anime': 'ANIME',
-  'group': 'GROUP',
-  'info': 'INFO',
-  'tools': "PERALATAN",
-  'owner': 'OWNER BOT',
-  'advanced': 'LANJUTAN',
-  '': 'LAIN = LAIN',
+  'main': 'Main Menu',
+  'anime': 'Anime Menu',
+  'nsfw': 'Nsfw Menu',
+  'group': 'Group Menu',
+  'info': 'Info',
+  'tools': "Tools Menu",
+  'owner': 'Owner Menu',
+  'advanced': 'Advance',
+  '': 'No Category',
 
 }
 const defaultMenu = {
   before: `
 S T A T S
-⬡ Name : *%name*
+⬡ Name : *%name* ${ucapan()}
 ⬡ Registered : ${user.registered ? '✖️ *Belum Terdaftar*' : '✔️ *Terdaftar*'}
 
 B O T  S T A T S
@@ -146,4 +147,22 @@ function clockString(ms) {
   let m = isNaN(ms) ? '--' : Math.floor(ms / 60000) % 60
   let s = isNaN(ms) ? '--' : Math.floor(ms / 1000) % 60
   return [h, m, s].map(v => v.toString().padStart(2, 0)).join(':')
+}
+
+function ucapan() {
+    const time = moment.tz('Asia/Jakarta').format('HH')
+    let res = "Selamat dinihari 🌆"
+    if (time >= 4) {
+        res = "Selamat pagi 🌄"
+    }
+    if (time > 10) {
+        res = "Selamat siang ☀️"
+    }
+    if (time >= 15) {
+        res = "Selamat sore 🌇"
+    }
+    if (time >= 18) {
+        res = "Selamat malam 🌙"
+    }
+    return res
 }
