@@ -30,6 +30,7 @@ module.exports = {
                     if (!"afkReason" in user) user.afkReason = "";
                     if (!("registered" in user)) user.registered = false;
                     if (!isNumber(user.healt)) user.healt = 0;
+                    if (!isNumber(user.role)) user.role = "Beginner";
                     if (!isNumber(user.stamina)) user.stamina = 100;
                     if (!isNumber(user.level)) user.level = 0;
                     if (!isNumber(user.exp)) user.exp = 0;
@@ -47,6 +48,7 @@ module.exports = {
                     premium: false,
                     banned: false,
                     mute: false,
+                    role: "Beginner",
                     afkReason: "",
                     registered: false,
                     healt: 100,
@@ -60,13 +62,13 @@ module.exports = {
                     warn: 0
                 }
                 
-               let chat = global.db.data.chats[m.chat]
-        if (typeof chat !== 'object') global.db.data.chats[m.chat] = {}
+               let chat = global.db.data.chats[m.from]
+        if (typeof chat !== 'object') global.db.data.chats[m.from] = {}
         if (chat) {
           if (!('isBanned' in chat)) chat.isBanned = false
           if (!('antiLink' in chat)) chat.antiLink = false
           if (!('antiSticker' in chat)) chat.antiSticker = false
-        } else global.db.data.chats[m.chat] = {
+        } else global.db.data.chats[m.from] = {
           isBanned: false,
           antiLink: false,
           antiSticker: false,
@@ -121,9 +123,7 @@ module.exports = {
                         isAdmin,
                         isBotAdmin,
                         isPrems,
-                        m,
-                        __dirname: ___dirname,
-                        __filename
+                        m
                     }))
                         continue
                 }
@@ -190,11 +190,11 @@ module.exports = {
                 m.isCommand = true;
                 let xp = 'exp' in plugin ? parseInt(plugin.exp) : 3 // <----- EXP yang didapat per Command ----->
                 if (xp > 200)
-                    m.reply('ɴɢᴇᴄɪᴛ -_-') // // <----- Jika EXP didapat melebihi 200 ----->
+                    m.reply('Ngechear Anjem') // // <----- Jika EXP didapat melebihi 200 ----->
                 else
                     m.exp += xp
                 if (!isPrems && plugin.limit && global.db.data.users[m.author || m.from].limit < plugin.limit * 1) {
-                    this.reply(m.chat, `[❗] ʟɪᴍɪᴛ ᴀɴᴅᴀ ʜᴀʙɪꜱ, ꜱɪʟᴀʜᴋᴀɴ ʙᴇʟɪ ᴍᴇʟᴀʟᴜɪ *${usedPrefix}buy limit*.`, m)
+                    this.reply(m.from, `Limit Anda Habis, Beli Limit Menggunakan Command *${usedPrefix}buy limit*.`, m)
                     continue; }// // <----- Jika limit habis ----->
                 let extra = {
                     match,
@@ -220,7 +220,9 @@ module.exports = {
                     if (e) {  // Jika terjadi error Kode
                         let text = format(e)
                         for (let [jid] of global.owner.filter(([number, _, isDeveloper]) => isDeveloper && number)) {
-                        m.reply(`Fitur ERROR, laporkan Pemilik BOT. \n*🗂️ Plugin:* ${m.plugin}\n*👤 Pengirim:* ${(isGroup ? m.author : m.from).replace('@c.us','')}\n*💬 Chat Owner:* https://wa.me/${jid}\n*💻 Command:* ${usedPrefix}${command} ${args.join(' ')}\n📄 *Error Logs:*\n\n\`\`\`${text}\`\`\``.trim())
+                        m.reply(`Maaf Sepertinya Fitur Sedang Error, Hubungi Owner Bot Untuk Melaporkan Error!\nChat Owner : https://wa.me/${jid}`.trim())
+                        await conn.sendMessage(jid, `[ERROR]\nFound Error!, 👤 Pengirim:* ${(isGroup ? m.author : m.from).replace('@c.us','')}\n*🗂️ Plugins:* ${m.plugin}\n*\n*💻 Command:* ${usedPrefix}${command} ${args.join(' ')}`.trim())
+                        await conn.sendMessage(jid, `\n📄 *Error Logs:*\n\n\`\`\`${text}\`\`\``.trim())
                         }
                     }
                 } finally {
@@ -232,7 +234,7 @@ module.exports = {
                         }
                     }
                     if (m.limit)
-                        m.reply(+m.limit + " ʟɪᴍɪᴛ ᴛᴇʀᴘᴀᴋᴀɪ ✔️");
+                        m.reply(+m.limit + "Limit Terpakai 🎟️");
                 }
                 break
             }
@@ -280,7 +282,7 @@ module.exports = {
 global.dfail = (type, m, conn) => {
     let userrs = global.db.data.users[m.from]
     let userss = userrs.name
-    let nmsr = `👋 Hai *@${userss}*,\n`
+    let nmsr = `👋 Hai @${userss},\n`
     let msg = {
     rowner: `${nmsr}\n🤵‍♂️ Mohon maaf, perintah ini hanya dapat digunakan oleh *OWNER* bot!`,
     owner: `${nmsr}\n👑 Maaf ya, perintah ini hanya untuk *Owner Bot*!`,
