@@ -1,3 +1,7 @@
+/**
+* Base Created by @moexti
+* Added more feature by @Swrdika
+*/
 require('./config.js');
 let fs = require('fs')
 let { format } = require('util')
@@ -5,13 +9,18 @@ const chalk = require('chalk');
 const pkg = require('whatsapp-web.js');
 const { MessageMedia } = pkg
 
-const { toAudio, toPTT, toVideo } = require('./lib/konversi.js')
+const { toAudio, toPTT, toVideo } = require('./lib/convert.js')
 var isNumber = x => typeof x === 'number' && !isNaN(x);
 module.exports = {
     async handler(m) {
         //if (!m) return;
         let chats = await m.getChat();
         let users = await m.getContact();
+        let user = global.db.data.users[m.from]
+        let level = user.level
+        let role = (Object.entries(roles).sort((a, b) => b[1] - a[1]).find(([,minLevel]) => level >= minLevel) || Object.entries(roles)[0])[0]
+        user.role = role
+        return true
         try {
 
             //  <----- Fungsi Database -----> Tambahin sendiri jika perlu.
@@ -74,7 +83,7 @@ module.exports = {
           antiSticker: false,
         }
             } catch (e) {
-                console.log("DATABASE RUSAK", e)
+                console.log("- Failed to load DB -", e)
             }
 
             // Untuk akses plugins kamu
@@ -86,7 +95,6 @@ module.exports = {
             let isAdmin = isGroup ? AdminFilter.map(v => v.replace(/[^0-9]/g, '') + '@c.us').includes(m.author ? m.author : m.from) : '';
             let isBotAdmin = isGroup ? AdminFilter.map(v => v.replace(/[^0-9]/g, '') + '@c.us').includes(conn.info.me._serialized) : '';
             const isPrems = isROwner || global.db.data.users[m.author || m.from].premium == true
-            // Untuk menjalankan plugin prefix dan cmd kamu
             let usedPrefix;
             for (let name in global.plugins) {
               let plugin = global.plugins[name];
@@ -222,7 +230,6 @@ module.exports = {
                         for (let [jid] of global.owner.filter(([number, _, isDeveloper]) => isDeveloper && number)) {
                         m.reply(`Maaf Sepertinya Fitur Sedang Error, Hubungi Owner Bot Untuk Melaporkan Error!\nChat Owner : https://wa.me/${jid}`.trim())
                         await conn.sendMessage(jid, `[ERROR]\nFound Error!, 👤 Pengirim:* ${(isGroup ? m.author : m.from).replace('@c.us','')}\n*🗂️ Plugins:* ${m.plugin}\n*\n*💻 Command:* ${usedPrefix}${command} ${args.join(' ')}`.trim())
-                        await conn.sendMessage(jid, `\n📄 *Error Logs:*\n\n\`\`\`${text}\`\`\``.trim())
                         }
                     }
                 } finally {
@@ -306,17 +313,5 @@ if (msg) return conn.sendMessage(m.from, msg, {
                                                           sourceUrl: `https://github.com/Swrdika`,
                                                       }
                                                   }
-                                                  })
-  }
-  // <----- BERKAHESPORT.ID OFC ----->>
-/* Whatsapp bot versi WAWEB ini mohon digunakan dengan bijak
-Terimakasih Untuk ALLAH S.W.T.
-Serta junjungan kami nabi Muhammad S.A.W
-
-Base created by @moexti 08 Mei 2023
-- Silahkan tambah disini bro...
--
--
-
-Jangan ubah yak mending ditambah... ^_^
-*/
+                                              }
+}

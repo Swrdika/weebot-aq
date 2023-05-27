@@ -1,15 +1,8 @@
-// <----- BERKAHESPORT.ID OFC ----->>
-/* Whatsapp bot versi WAWEB ini mohon digunakan dengan bijak
-Terimakasih Untuk ALLAH S.W.T.
-Serta junjungan kami nabi Muhammad S.A.W
-
-Base created by @moexti 08 Mei 2023
-- Silahkan tambah disini bro...
--
--
-
-Jangan ubah yak mending ditambah... ^_^
+/**
+* Base Created by @moexti
+* Added more feature by @Swrdika
 */
+
 let { spawn } = require('child_process')
 let path = require('path')
 let fs = require('fs')

@@ -1,3 +1,4 @@
+let moment = require('moment-timezone')
 let fs = require('fs')
 let pkg = require('whatsapp-web.js')
 let { MessageMedia } = pkg

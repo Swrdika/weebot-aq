@@ -1,14 +1,6 @@
-// <----- BERKAHESPORT.ID OFC ----->>
-/* Whatsapp bot versi WAWEB ini mohon digunakan dengan bijak
-Terimakasih Untuk ALLAH S.W.T.
-Serta junjungan kami nabi Muhammad S.A.W
-
-Base created by @moexti 08 Mei 2023
-- Silahkan tambah disini bro...
--
--
-
-Jangan ubah yak mending ditambah... ^_^
+/**
+* Base Created by @moexti
+* Added more feature by @Swrdika
 */
 const { Client, LocalAuth } = require('whatsapp-web.js');
 const QRCode = require('qrcode-terminal');
@@ -25,10 +17,11 @@ const logger = require('pino')({
             translateTime: true,
         }}}).child({});
 
-//Jika terjadi error
+
 process.on("uncaughtException", console.error);
 
-// Membuka PLUGINS
+
+//Load Plugins
 const pluginFolder = path.join(__dirname, "plugins");
 const pluginFilter = fs
   .readdirSync(pluginFolder, { withFileTypes: true })
@@ -90,10 +83,10 @@ global.reload = async (_event, filename) => {
 };
 Object.freeze(global.reload);
 
-// <----- Prefix BOT ----->
+
 global.prefix = new RegExp("^[" + "‎xzXZ/i!#$%+£¢€¥^°=¶∆×÷π√✓©®:;?&.\\-".replace(/[|\\{}()[\]^$+*?.\-\^]/g, "\\$&") + "]");
 
-// <----- Pake REST API ----->
+
 /** @type {(name: string, path: string, query: { [Key: string]: any }, apikeyqueryname: string) => string} */
 global.API = (name, path = "/", query = {}, apikeyqueryname) =>
   (name in global.RestAPI ? global.RestAPI[name].website : name)
@@ -105,7 +98,7 @@ global.API = (name, path = "/", query = {}, apikeyqueryname) =>
   } : {})})) : '' ))
 
 
-// <----- DATABASE BOT ----->
+
 var low
 try {
   low = require('lowdb');
@@ -120,57 +113,58 @@ global.db = new Low(
 async function ClientConnect() {
     global.conn = new Client({
         authStrategy: new LocalAuth({
-        clientId: 'cowboy-bebot', // isi sesuka klean
+        clientId: 'cowboy-bebot',
         dataPath: './session' // nama folder session bebas dikasih nama apa aja
         }),
         puppeteer: {
             args: ["--no-sandbox", "--disable-gpu"],
             executablePath: '/usr/bin/google-chrome-stable'// khusus vps | kalo kamu pengguna rdp bisa ganti jadj path chrome mu
-            // Ubah sesuai lokasi penginstalan chrome kamu. 
-            // (Jika tidak maka error, kalo mau jalanin hapus aja bagian executablePath. Tapi kamu ga bisa ngirim video!)
         }
     });
 
-    // <----- Menghubungkan koneksi WAWEB ----->
+
     conn.on('loading_screen', (percent) => {
+    logger.info(`Wait... ${percemt}`)
     });
 
-    // <----- Membuat QR untuk di scan Perangkat tertaut ----->
+
     conn.on('qr', qr => {
         QRCode.generate(qr, { small: true });
         logger.info("Scan QR Code di atas agar terhubung ke WaWeb...");
     });
 
-    // <----- Sedang memverifikasi WhatsappWEB----->
+
     conn.on('authenticated', () => {
       logger.info("Connecting...");
   });
     
-  // Jika gagal verifikasi maka kita koneksikan ulang ----->
+
     conn.on('auth_failure', msg => {
     logger.error(msg)
     ClientConnect()
     loadDatabase()
   });
 
-    // <----- BOT sudah terhubung ke Whatsapp ----->
+
     conn.on('ready', async () => {
         if (global.db.data == null) await loadDatabase();
         logger.info("Connected ✅"); // Code dibawah buat info bot ini berjalan sukses...
-        await conn.sendMessage("6281238142144@c.us", `${JSON.stringify(conn.info)}`)
+        await conn.sendMessage(owner, `${JSON.stringify(conn.info)}`)
     });
 
-    // <----- Penghubung pesan fitur PLUGINS ----->
+
     conn.on('message', require('./handler').handler.bind(conn));
 
-    // <----- Menginisiasi Whatsapp ke BOT ----->
+
     conn.initialize();
 
     return conn;
 
 }
 
-// // <----- Memuat Database BOT ----->
+/**
+Database Bot
+*/
 loadDatabase()
 async function loadDatabase() {
   await global.db.read()
@@ -184,7 +178,7 @@ async function loadDatabase() {
   global.db.chain = _.chain(global.db.data)
 }
 
-// // <----- Menyimpan database BOT ----->
+
 setInterval(async () =>{
   if (global.db) await global.db.write();
 }, 30 * 1000)
